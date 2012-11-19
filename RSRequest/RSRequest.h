@@ -13,10 +13,8 @@ static NSString *RSRequestErrorDomain = @"RSRequestErrorDomain";
 typedef void (^RSRequestBlock) (NSData *data,NSError *error,NSHTTPURLResponse *response);
 typedef void (^RSRequestJSONBlock) (id result,NSError *error,NSHTTPURLResponse *response);
 
-@interface RSRequest : NSObject <NSURLConnectionDelegate,NSURLConnectionDataDelegate>
+@interface RSRequest : NSMutableURLRequest <NSURLConnectionDelegate,NSURLConnectionDataDelegate>
 
-@property (nonatomic,strong) NSURL *URL;
-@property (nonatomic,strong) NSString *HTTPMethod;
 @property (nonatomic,strong) NSURLConnection *URLConnection;
 @property (nonatomic,strong) NSMutableData *mutableData;
 @property (nonatomic,strong) NSHTTPURLResponse *HTTPResponse;
@@ -26,10 +24,8 @@ typedef void (^RSRequestJSONBlock) (id result,NSError *error,NSHTTPURLResponse *
 
 @property (nonatomic,copy) RSRequestBlock requestBlock;
 @property (nonatomic,copy) RSRequestJSONBlock requestJSONBlock;
-
--(id)initWithURL:(NSURL *)url method:(NSString *)method;
--(id)initWithRequest:(NSMutableURLRequest *)request;
 -(void)startWithCompletionHandler:(RSRequestBlock)block;
 -(void)startWithJSONCompletionHandler:(RSRequestJSONBlock)block;
-
+-(void)setUserAgentString:(NSString *)userAgent;
+-(NSString *)userAgentString;
 @end

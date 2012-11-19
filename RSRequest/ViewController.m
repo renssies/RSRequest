@@ -7,7 +7,7 @@
 //
 
 #import "ViewController.h"
-#import "JSONRequest.h"
+#import "ExampleRequest.h"
 
 @interface ViewController ()
 
@@ -32,7 +32,7 @@
 }
 
 -(IBAction)startJSONRequest:(id)sender {
-    [[JSONRequest requestForSearchWithQuery:@"orange"] startWithJSONCompletionHandler:^(id result, NSError *error, NSHTTPURLResponse *response) {
+    [[ExampleRequest requestForSearchWithQuery:@"orange"] startWithJSONCompletionHandler:^(id result, NSError *error, NSHTTPURLResponse *response) {
         NSLog(@"Main thread %@",([NSThread isMainThread] ? @"YES" : @"NO"));
         NSLog(@"HTTPResponse Status Code %i",response.statusCode);
         if(error) {

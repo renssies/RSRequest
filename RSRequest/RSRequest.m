@@ -10,33 +10,43 @@
 
 @implementation RSRequest
 
--(id)initWithURL:(NSURL *)url method:(NSString *)method {
-    if((self = [super init])) {
-        NSMutableURLRequest *URLRequest = [NSMutableURLRequest requestWithURL:url];
-        [URLRequest setHTTPMethod:method];
-        _URLConnection = [[NSURLConnection alloc] initWithRequest:URLRequest delegate:self];
-    }
-    return self;
-}
-
--(id)initWithRequest:(NSMutableURLRequest *)request {
-    if((self = [super init])) {
-        _URLConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
-    }
-    return self;
-}
-
 -(void)startWithCompletionHandler:(RSRequestBlock)block {
     [self setRequestBlock:block];
+    [self prepareForStart];
     [_URLConnection start];
 }
 
 -(void)startWithJSONCompletionHandler:(RSRequestJSONBlock)block {
     [self setRequestJSONBlock:block];
+    [self prepareForStart];
     [_URLConnection start];
 }
 
-#pragma mark NSURLConnection Delegate 
+-(void)prepareForStart {
+    if(!_URLConnection) {
+        _URLConnection = [[NSURLConnection alloc] initWithRequest:self delegate:self];
+    }
+}
+
+-(void)setUserAgentString:(NSString *)userAgent {
+    if(userAgent != nil) {
+        [self setValue:userAgent forHTTPHeaderField:@"User-Agent"];
+    } else {
+        NSMutableDictionary *allHeaderFields = [NSMutableDictionary dictionaryWithDictionary:[self allHTTPHeaderFields]];
+        [allHeaderFields removeObjectForKey:@"User-Agent"];
+        [self setAllHTTPHeaderFields:allHeaderFields];
+    }
+}
+
+-(NSString *)userAgentString {
+    if([self valueForHTTPHeaderField:@"User-Agent"]) {
+        return [self valueForHTTPHeaderField:@"User-Agent"];
+    } else {
+        return nil;
+    }
+}
+
+#pragma mark NSURLConnection Delegate
 
 -(void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
     if(_mutableData == nil) {
@@ -50,6 +60,7 @@
 }
 
 -(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+    
     if(_requestBlock) {
         _requestBlock(nil,error,nil);
     } else if(_requestJSONBlock) {
@@ -106,9 +117,6 @@
 }
 
 -(void)dealloc {
-    
-    [_URL release];
-	[_HTTPMethod release];
 	[_URLConnection release];
 	_HTTPResponse = nil;
     _requestBlock = nil;

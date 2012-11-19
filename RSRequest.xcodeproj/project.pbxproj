@@ -19,7 +19,7 @@
 		0C555E571646A42900F7384C /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C555E561646A42900F7384C /* ViewController.m */; };
 		0C555E5A1646A42900F7384C /* ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0C555E581646A42900F7384C /* ViewController.xib */; };
 		0C555E661646A45600F7384C /* RSRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C555E651646A45600F7384C /* RSRequest.m */; };
-		0C555E801646C28D00F7384C /* JSONRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C555E7F1646C28D00F7384C /* JSONRequest.m */; };
+		0C555E801646C28D00F7384C /* ExampleRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C555E7F1646C28D00F7384C /* ExampleRequest.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,8 +41,8 @@
 		0C555E591646A42900F7384C /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController.xib; sourceTree = "<group>"; };
 		0C555E641646A45600F7384C /* RSRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSRequest.h; sourceTree = "<group>"; };
 		0C555E651646A45600F7384C /* RSRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSRequest.m; sourceTree = "<group>"; };
-		0C555E7E1646C28D00F7384C /* JSONRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONRequest.h; sourceTree = "<group>"; };
-		0C555E7F1646C28D00F7384C /* JSONRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONRequest.m; sourceTree = "<group>"; };
+		0C555E7E1646C28D00F7384C /* ExampleRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExampleRequest.h; sourceTree = "<group>"; };
+		0C555E7F1646C28D00F7384C /* ExampleRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExampleRequest.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,8 +94,8 @@
 				0C555E551646A42900F7384C /* ViewController.h */,
 				0C555E561646A42900F7384C /* ViewController.m */,
 				0C555E581646A42900F7384C /* ViewController.xib */,
-				0C555E7E1646C28D00F7384C /* JSONRequest.h */,
-				0C555E7F1646C28D00F7384C /* JSONRequest.m */,
+				0C555E7E1646C28D00F7384C /* ExampleRequest.h */,
+				0C555E7F1646C28D00F7384C /* ExampleRequest.m */,
 				0C555E441646A42900F7384C /* Supporting Files */,
 				0C555E641646A45600F7384C /* RSRequest.h */,
 				0C555E651646A45600F7384C /* RSRequest.m */,
@@ -187,7 +187,7 @@
 				0C555E4E1646A42900F7384C /* AppDelegate.m in Sources */,
 				0C555E571646A42900F7384C /* ViewController.m in Sources */,
 				0C555E661646A45600F7384C /* RSRequest.m in Sources */,
-				0C555E801646C28D00F7384C /* JSONRequest.m in Sources */,
+				0C555E801646C28D00F7384C /* ExampleRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

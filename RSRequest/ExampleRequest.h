@@ -1,5 +1,5 @@
 //
-//  JSONRequest.h
+//  ExampleRequest.h
 //  RSRequest
 //
 //  Created by Rens Verhoeven on 04-11-12.
@@ -8,8 +8,8 @@
 
 #import "RSRequest.h"
 
-@interface JSONRequest : RSRequest
+@interface ExampleRequest : RSRequest
 
-+(JSONRequest *)requestForSearchWithQuery:(NSString *)query;
++(RSRequest *)requestForSearchWithQuery:(NSString *)query;
 
 @end
