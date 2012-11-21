@@ -31,14 +31,36 @@
     
 }
 
+-(IBAction)startFaultyJSONRequest:(id)sender {
+    [[ExampleRequest faultyRequestForSearchWithQuery:@"orange"] startWithJSONCompletionHandler:^(id result, NSError *error, NSHTTPURLResponse *response) {
+        //Blocks are performed on main thread
+        NSLog(@"Main thread %@",([NSThread isMainThread] ? @"YES" : @"NO"));
+        //If there is no error, the error object is nil
+        if(error) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:[error localizedDescription] delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil];
+            [alert show];
+            [alert release];
+        } else {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Result" message:[result description] delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil];
+            [alert show];
+            [alert release];
+        }
+    }];
+}
+
 -(IBAction)startJSONRequest:(id)sender {
     [[ExampleRequest requestForSearchWithQuery:@"orange"] startWithJSONCompletionHandler:^(id result, NSError *error, NSHTTPURLResponse *response) {
+        //Blocks are performed on main thread
         NSLog(@"Main thread %@",([NSThread isMainThread] ? @"YES" : @"NO"));
-        NSLog(@"HTTPResponse Status Code %i",response.statusCode);
+        //If there is no error, the error object is nil
         if(error) {
-            NSLog(@"An error occured: %@ %@",[error localizedDescription],[error localizedFailureReason]);
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:[error localizedDescription] delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil];
+            [alert show];
+            [alert release];
         } else {
-            NSLog(@"JSON %@",result);
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Result" message:[result description] delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil];
+            [alert show];
+            [alert release];
         }
     }];
 }

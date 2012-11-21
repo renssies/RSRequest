@@ -8,6 +8,14 @@
 
 #import <Foundation/Foundation.h>
 
+#define RSRequestDefaultNumberOfRetrys 1
+
+//UIApplication+NetworkActivity
+@interface UIApplication (NetworkActivity)
+- (void)showNetworkActivityIndicator;
+- (void)hideNetworkActivityIndicator;
+@end
+
 static NSString *RSRequestErrorDomain = @"RSRequestErrorDomain";
 
 typedef void (^RSRequestBlock) (NSData *data,NSError *error,NSHTTPURLResponse *response);
@@ -22,10 +30,17 @@ typedef void (^RSRequestJSONBlock) (id result,NSError *error,NSHTTPURLResponse *
 @property (nonatomic,strong) NSString *basicAuthenticationUsername;
 @property (nonatomic,strong) NSString *basicAuthenticationPassword;
 
+@property (nonatomic,assign) int numberOfRetrys;
+
 @property (nonatomic,copy) RSRequestBlock requestBlock;
 @property (nonatomic,copy) RSRequestJSONBlock requestJSONBlock;
+
 -(void)startWithCompletionHandler:(RSRequestBlock)block;
 -(void)startWithJSONCompletionHandler:(RSRequestJSONBlock)block;
+
+//Setters and getters
 -(void)setUserAgentString:(NSString *)userAgent;
 -(NSString *)userAgentString;
 @end
+
+

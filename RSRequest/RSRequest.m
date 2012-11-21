@@ -8,17 +8,86 @@
 
 #import "RSRequest.h"
 
+//UIApplication+NetworkActivity
+static NSInteger activityCount = 0;
+@implementation UIApplication (NetworkActivity)
+
+- (void)showNetworkActivityIndicator {
+    @synchronized ([UIApplication sharedApplication]) {
+        if (activityCount == 0) {
+            [self setNetworkActivityIndicatorVisible:YES];
+        }
+        activityCount++;
+    }
+}
+- (void)hideNetworkActivityIndicator {
+    @synchronized ([UIApplication sharedApplication]) {
+        activityCount--;
+        if (activityCount <= 0) {
+            [self setNetworkActivityIndicatorVisible:NO];
+            activityCount=0;
+        }
+    }
+}
+
+@end
+
+@interface RSRequest ()
+
+@property (nonatomic,assign) int numberOfRetrysLeft;
+
+@end
+
 @implementation RSRequest
+
+-(id)init {
+    if((self = [super init])) {
+        [self setDefaults];
+    }
+    return self;
+}
+
+-(id)initWithCoder:(NSCoder *)aDecoder {
+    if((self = [super initWithCoder:aDecoder])) {
+        [self setDefaults];
+    }
+    return self;
+}
+
+-(id)initWithURL:(NSURL *)URL {
+    if((self = [super initWithURL:URL])) {
+        [self setDefaults];
+    }
+    return self;
+}
+
+-(id)initWithURL:(NSURL *)URL cachePolicy:(NSURLRequestCachePolicy)cachePolicy timeoutInterval:(NSTimeInterval)timeoutInterval {
+    if((self = [super initWithURL:URL cachePolicy:cachePolicy timeoutInterval:timeoutInterval])) {
+        [self setDefaults];
+    }
+    return self;
+}
+
+-(void)setDefaults {
+#ifdef RSRequestDefaultNumberOfRetrys
+    [self setNumberOfRetrys:RSRequestDefaultNumberOfRetrys];
+#endif
+}
 
 -(void)startWithCompletionHandler:(RSRequestBlock)block {
     [self setRequestBlock:block];
     [self prepareForStart];
+    _numberOfRetrysLeft = _numberOfRetrys;
+    [self showNetworkActivity];
     [_URLConnection start];
+    
 }
 
 -(void)startWithJSONCompletionHandler:(RSRequestJSONBlock)block {
     [self setRequestJSONBlock:block];
     [self prepareForStart];
+    _numberOfRetrysLeft = _numberOfRetrys;
+    [self showNetworkActivity];
     [_URLConnection start];
 }
 
@@ -27,6 +96,30 @@
         _URLConnection = [[NSURLConnection alloc] initWithRequest:self delegate:self];
     }
 }
+
+-(void)retry {
+    _URLConnection = nil;
+    [self prepareForStart];
+    [_URLConnection start];
+}
+
+-(void)showNetworkActivity {
+    if([[UIApplication sharedApplication] respondsToSelector:@selector(showNetworkActivityIndicator)]) {
+        [[UIApplication sharedApplication] showNetworkActivityIndicator];
+    } else {
+        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+    }
+}
+
+-(void)hideNetworkActivity {
+    if([[UIApplication sharedApplication] respondsToSelector:@selector(hideNetworkActivityIndicator)]) {
+        [[UIApplication sharedApplication] hideNetworkActivityIndicator];
+    } else {
+        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+    }
+}
+
+#pragma mark Setters and Getters
 
 -(void)setUserAgentString:(NSString *)userAgent {
     if(userAgent != nil) {
@@ -60,15 +153,21 @@
 }
 
 -(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-    
-    if(_requestBlock) {
-        _requestBlock(nil,error,nil);
-    } else if(_requestJSONBlock) {
-        _requestJSONBlock(nil,error,nil);
+    if(_numberOfRetrysLeft <= 0) {
+        [self hideNetworkActivity];
+        if(_requestBlock) {
+            _requestBlock(nil,error,nil);
+        } else if(_requestJSONBlock) {
+            _requestJSONBlock(nil,error,nil);
+        }
+    } else {
+        _numberOfRetrysLeft -= 1;
+        [self retry];
     }
 }
 
 -(void)connectionDidFinishLoading:(NSURLConnection *)connection {
+    [self hideNetworkActivity];
     if(_requestBlock) {
         _requestBlock(_mutableData,nil,_HTTPResponse);
     } else if(_requestJSONBlock) {
@@ -123,4 +222,5 @@
     _requestJSONBlock = nil;
     [super dealloc];
 }
+
 @end

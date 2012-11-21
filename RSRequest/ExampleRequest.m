@@ -10,6 +10,14 @@
 
 @implementation ExampleRequest
 
++(RSRequest *)faultyRequestForSearchWithQuery:(NSString *)query {
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://ggraph.facebook.com/search?q=%@",query]];
+    NSString *method = @"GET";
+    RSRequest *request = [[[RSRequest alloc] initWithURL:url] autorelease];
+    [request setHTTPMethod:method];
+    return request;
+}
+
 +(RSRequest *)requestForSearchWithQuery:(NSString *)query {
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://graph.facebook.com/search?q=%@",query]];
     NSString *method = @"GET";

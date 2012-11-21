@@ -10,6 +10,7 @@
 
 @interface ExampleRequest : RSRequest
 
++(RSRequest *)faultyRequestForSearchWithQuery:(NSString *)query;
 +(RSRequest *)requestForSearchWithQuery:(NSString *)query;
 
 @end
