@@ -1,6 +1,7 @@
 //
 //  RSRequest.m
 //  RSRequest
+//  Version 1.0
 //
 //  Created by Rens Verhoeven on 04-11-12.
 //  Copyright (c) 2012 Renssies. All rights reserved.
@@ -171,12 +172,17 @@ static NSInteger activityCount = 0;
     if(_requestBlock) {
         _requestBlock(_mutableData,nil,_HTTPResponse);
     } else if(_requestJSONBlock) {
-        NSError *jsonError = nil;
-        id result = [NSJSONSerialization JSONObjectWithData:_mutableData options:kNilOptions error:&jsonError];
-        if(jsonError) {
-            _requestJSONBlock(nil,jsonError,_HTTPResponse);
+        if (_mutableData) {
+            NSError *jsonError = nil;
+            id result = [NSJSONSerialization JSONObjectWithData:_mutableData options:kNilOptions error:&jsonError];
+            if(jsonError) {
+                _requestJSONBlock(nil,jsonError,_HTTPResponse);
+            } else {
+                _requestJSONBlock(result,nil,_HTTPResponse);
+            }
         } else {
-            _requestJSONBlock(result,nil,_HTTPResponse);
+            NSError *error = [NSError errorWithDomain:RSRequestErrorDomain code:-1412 userInfo:@{NSLocalizedDescriptionKey : @"Returned data is nil, JSON can't be parsed"}];
+            _requestJSONBlock(nil,error,_HTTPResponse);
         }
     }
 }

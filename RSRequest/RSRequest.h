@@ -1,6 +1,7 @@
 //
 //  RSRequest.h
 //  RSRequest
+//  Version 1.0
 //
 //  Created by Rens Verhoeven on 04-11-12.
 //  Copyright (c) 2012 Renssies. All rights reserved.
