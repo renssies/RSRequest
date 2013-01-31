@@ -32,6 +32,7 @@ typedef void (^RSRequestJSONBlock) (id result,NSError *error,NSHTTPURLResponse *
 @property (nonatomic,strong) NSString *basicAuthenticationPassword;
 
 @property (nonatomic,assign) int numberOfRetrys;
+@property (nonatomic,assign) BOOL cancelledAfterWrongAuthentication;
 
 @property (nonatomic,copy) RSRequestBlock requestBlock;
 @property (nonatomic,copy) RSRequestJSONBlock requestJSONBlock;

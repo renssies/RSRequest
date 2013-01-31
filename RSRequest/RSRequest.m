@@ -93,13 +93,16 @@ static NSInteger activityCount = 0;
 }
 
 -(void)prepareForStart {
+    _cancelledAfterWrongAuthentication = NO;
     if(!_URLConnection) {
-        _URLConnection = [[NSURLConnection alloc] initWithRequest:self delegate:self];
+        _URLConnection = [NSURLConnection connectionWithRequest:self delegate:self];
     }
 }
 
 -(void)retry {
     _URLConnection = nil;
+    _mutableData = nil;
+    _cancelledAfterWrongAuthentication = NO;
     [self prepareForStart];
     [_URLConnection start];
 }
@@ -154,6 +157,9 @@ static NSInteger activityCount = 0;
 }
 
 -(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+    if (_cancelledAfterWrongAuthentication) {
+        return;
+    }
     if(_numberOfRetrysLeft <= 0) {
         [self hideNetworkActivity];
         if(_requestBlock) {
@@ -165,6 +171,7 @@ static NSInteger activityCount = 0;
         _numberOfRetrysLeft -= 1;
         [self retry];
     }
+    
 }
 
 -(void)connectionDidFinishLoading:(NSURLConnection *)connection {
@@ -175,6 +182,7 @@ static NSInteger activityCount = 0;
         if (_mutableData) {
             NSError *jsonError = nil;
             id result = [NSJSONSerialization JSONObjectWithData:_mutableData options:kNilOptions error:&jsonError];
+            [_mutableData release];
             if(jsonError) {
                 _requestJSONBlock(nil,jsonError,_HTTPResponse);
             } else {
@@ -196,8 +204,10 @@ static NSInteger activityCount = 0;
         [[challenge sender] useCredential:credentials forAuthenticationChallenge:challenge];
         [credentials release];
         } else {
+            _cancelledAfterWrongAuthentication = YES;
             [[challenge sender] cancelAuthenticationChallenge:challenge];
-            NSError *error = [NSError errorWithDomain:RSRequestErrorDomain code:-42 userInfo:@{NSLocalizedDescriptionKey : @"Authetication Username or Password are incorrect"}];
+            NSError *error = [NSError errorWithDomain:RSRequestErrorDomain code:-42 userInfo:@{NSLocalizedDescriptionKey : @"Authentication Username or Password are incorrect"}];
+            [self hideNetworkActivity];
             if(_requestBlock) {
                 _requestBlock(nil,error,nil);
             } else if(_requestJSONBlock) {
@@ -222,10 +232,10 @@ static NSInteger activityCount = 0;
 }
 
 -(void)dealloc {
-	[_URLConnection release];
 	_HTTPResponse = nil;
     _requestBlock = nil;
     _requestJSONBlock = nil;
+    _mutableData = nil;
     [super dealloc];
 }
 
