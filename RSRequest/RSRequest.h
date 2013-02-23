@@ -17,7 +17,7 @@
 - (void)hideNetworkActivityIndicator;
 @end
 
-static NSString *RSRequestErrorDomain = @"RSRequestErrorDomain";
+NSString *const RSRequestErrorDomain;
 
 typedef void (^RSRequestBlock) (NSData *data,NSError *error,NSHTTPURLResponse *response);
 typedef void (^RSRequestJSONBlock) (id result,NSError *error,NSHTTPURLResponse *response);
